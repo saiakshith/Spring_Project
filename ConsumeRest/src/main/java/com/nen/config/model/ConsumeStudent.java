@@ -3,16 +3,12 @@ package com.nen.config.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
 public class ConsumeStudent {
 
-//    @Id
     private int id;
 
     @Size(min = 3, message = "username minimum length should be 3")

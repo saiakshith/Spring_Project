@@ -15,7 +15,6 @@
    ">
 <!--    <mvc:resources mapping="/WEB-INF/resources/**" location="/resources/" /> -->
 <!--     <tx:annotation-driven /> -->
-   <tx:annotation-driven />
     <mvc:annotation-driven />
    <context:annotation-config />
    <context:component-scan base-package = "com.nen" />

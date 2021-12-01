@@ -24,90 +24,71 @@ public class RestHomeController {
 
     @Autowired
     public void setSs(StudentService ss) {
-    System.out.println("I am in resthomecontroller setting studentservice -------------");
         this.ss = ss;
     }
 
-//    getting single student
     @GetMapping(value = "/student/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Student> getStudentPage(@PathVariable("id") Integer studentId, Model model) {
 
         try{
             Student student = getSs().serviceGetStudent(studentId);
-
             return new ResponseEntity(student, HttpStatus.OK);
-
         }catch (Exception e){
-            System.out.println("Get mapping exception --------" + e);
-            e.printStackTrace();
-
             return new ResponseEntity(e, HttpStatus.NO_CONTENT);
         }
 
     }
 
-//    getting list of all students
     @GetMapping(value = "/getAllStudents", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<Student>> allStudentsPage(Model model){
 
         try{
             List<Student> studentList = getSs().serviceGetAllStudents();
-
             return new ResponseEntity(studentList, HttpStatus.OK);
-
         }catch (Exception e){
-            System.out.println("Get mapping exception --------" + e);
-            e.printStackTrace();
-
             return new ResponseEntity(e, HttpStatus.NO_CONTENT);
         }
 
     }
 
-//    creating a new student
     @PostMapping(path = "/createStudent",consumes = {MediaType.APPLICATION_JSON_VALUE } ,produces = {MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity registerPage(@Valid @RequestBody Student student, BindingResult br, Model model){
 
-        try{
-            this.getSs().serviceSaveStudent(student);
-            ResponseEntity<Student> responseEntity = new ResponseEntity(student, HttpStatus.CREATED);
-            System.out.println("This is the body of post request api/createStudent try block ----------" + responseEntity.getBody() + "  response entity ------" + responseEntity);
-
+        if(br.hasErrors()){
+            ResponseEntity responseEntity = new ResponseEntity(br.getFieldErrors(), HttpStatus.FORBIDDEN);
             return responseEntity;
+        }else {
+            try{
+                this.getSs().serviceSaveStudent(student);
+                ResponseEntity<Student> responseEntity = new ResponseEntity(student, HttpStatus.CREATED);
+                return responseEntity;
 
-        }catch (Exception e){
-            System.out.println("Post mapping exception raised -----" + e);
-            e.printStackTrace();
-            ResponseEntity responseEntity = new ResponseEntity(e, HttpStatus.FORBIDDEN);
-
-            return responseEntity;
+            }catch (Exception e){
+                ResponseEntity responseEntity = new ResponseEntity(e, HttpStatus.FORBIDDEN);
+                return responseEntity;
+            }
         }
 
     }
 
-//    updating an existing student
     @PutMapping(value = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity updateStudentPage(@Valid @RequestBody Student student, BindingResult br, Model model){
 
-        System.out.println("Student in put mapping : --------------" + student );
-        if(br.hasErrors()){
-
+/*        if(br.hasErrors()){
             List<FieldError> errorsList = br.getFieldErrors();
-            System.out.println(errorsList);
-
             ResponseEntity<List<FieldError>> responseEntity = new ResponseEntity(errorsList, HttpStatus.FORBIDDEN);
-            System.out.println("api/update if This is update error list by responseentity.getbody() --------------------" + responseEntity.getBody() + " error list bro-----   " + errorsList);
-
             return responseEntity;
-        }else{
+        }else{*/
+            try{
+                getSs().serviceUpdateStudent(student);
+                ResponseEntity<Student> responseEntity = new ResponseEntity(student, HttpStatus.OK);
+                return responseEntity;
 
-            System.out.println("The saving method is called from api/update else -------------");
-            getSs().serviceUpdateStudent(student);
-            ResponseEntity<Student> responseEntity = new ResponseEntity(student, HttpStatus.OK);
-            System.out.println("api/update else This is update error list by responseentity.getbody() --------------------" + responseEntity.getBody() + " reponseEntity bro-----   " + responseEntity);
-
-            return responseEntity;
-        }
+            }catch (Exception e){
+                ResponseEntity responseEntity = new ResponseEntity(e, HttpStatus.FORBIDDEN);
+                return responseEntity;
+            }
+//        }
 
     }
 
@@ -116,14 +97,8 @@ public class RestHomeController {
 
         try{
             getSs().serviceDeleteStudent(studentId);
-
             return new ResponseEntity("From ResponseEntity Student deleted successfully with id " + String.valueOf(studentId), HttpStatus.OK);
-
         }catch (Exception e){
-
-            System.out.println("Delete mapping exception --------" + e);
-            e.printStackTrace();
-
             return new ResponseEntity(e, HttpStatus.NO_CONTENT);
         }
 

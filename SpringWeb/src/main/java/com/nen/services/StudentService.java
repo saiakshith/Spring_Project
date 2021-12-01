@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class StudentService {
+public class StudentService implements StudentServiceInterface {
 
     private StudentDao sd;
 
@@ -18,7 +18,6 @@ public class StudentService {
 
     @Autowired
     public void setSd(com.nen.dao.StudentDao sd) {
-    System.out.println("I am from student service setting sutudent dao ---------------");
         this.sd = sd;
     }
 
@@ -27,12 +26,10 @@ public class StudentService {
     }
 
     public Student serviceGetStudent(Integer studentId){
-
         return sd.getStudent(studentId);
     }
 
     public List<Student> serviceGetAllStudents(){
-
        return sd.getAllStudents();
     }
 
