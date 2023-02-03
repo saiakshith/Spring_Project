@@ -1,2 +1,1 @@
-Hello world
-This line is written from github web app.
+Hello world this is my line 1.
